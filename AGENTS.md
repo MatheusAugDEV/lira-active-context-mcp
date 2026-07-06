@@ -1,41 +1,29 @@
 # Cloudflare Workers
 
-STOP. Your knowledge of Cloudflare Workers APIs and limits may be outdated. Always retrieve current documentation before any Workers, KV, R2, D1, Durable Objects, Queues, Vectorize, AI, or Agents SDK task.
-
-## Docs
-
-- https://developers.cloudflare.com/workers/
-- MCP: `https://docs.mcp.cloudflare.com/mcp`
-
-For all limits and quotas, retrieve from the product's `/platform/limits/` page. eg. `/workers/platform/limits`
+STOP. Keep Cloudflare Workers and MCP behavior aligned with the current template and repo settings.
 
 ## Commands
 
-| Command | Purpose |
-|---------|---------|
-| `npx wrangler dev` | Local development |
-| `npx wrangler deploy` | Deploy to Cloudflare |
-| `npx wrangler types` | Generate TypeScript types |
+- `wrangler secret put GITHUB_PAT`
+- `wrangler secret put ACCESS_TOKEN`
+- `npm run deploy`
 
-Run `wrangler types` after changing bindings in wrangler.jsonc.
+## Style
 
-## Node.js Compatibility
+- Follow the Cloudflare template style already in use.
+- Do not add extra abstractions unless they reduce repetition or risk.
 
-https://developers.cloudflare.com/workers/runtime-apis/nodejs/
+## Tests
 
-## Errors
+- `npm run dev` for local validation.
+- Then inspect the deployed MCP endpoint with MCP Inspector.
 
-- **Error 1102** (CPU/Memory exceeded): Retrieve limits from `/workers/platform/limits/`
-- **All errors**: https://developers.cloudflare.com/workers/observability/errors/
+## Security
 
-## Product Docs
+- Never commit `.env`.
+- `GITHUB_PAT` must be a fine-grained PAT with read-only access to this repo.
+- `ACCESS_TOKEN` is internal and can be any random value.
 
-Retrieve API references and limits from:
-`/kv/` · `/r2/` · `/d1/` · `/durable-objects/` · `/queues/` · `/vectorize/` · `/workers-ai/` · `/agents/`
+## Git
 
-## Best Practices (conditional)
-
-If the application uses Durable Objects or Workflows, refer to the relevant best practices:
-
-- Durable Objects: https://developers.cloudflare.com/durable-objects/best-practices/rules-of-durable-objects/
-- Workflows: https://developers.cloudflare.com/workflows/build/rules-of-workflows/
+- Commit message: `feat: implement lira-active-context MCP tools`
