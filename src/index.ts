@@ -265,6 +265,16 @@ export default {
 		const parts = url.pathname.split("/").filter(Boolean);
 		const accessToken = (env as any).ACCESS_TOKEN as string | undefined;
 
+		console.log("DEBUG fetch:", {
+			pathname: url.pathname,
+			parts,
+			parts0: parts[0],
+			parts1: parts[1],
+			accessToken: accessToken ? `[SECRET:${accessToken.length}chars]` : "UNDEFINED",
+			envKeys: Object.keys(env),
+			envAccessToken: (env as any).ACCESS_TOKEN ? "PRESENT" : "MISSING",
+		});
+
 		if (parts[0] !== "mcp" || !accessToken || parts[1] !== accessToken) {
 			return new Response("Not found", { status: 404 });
 		}
