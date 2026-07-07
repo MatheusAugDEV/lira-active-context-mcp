@@ -264,28 +264,33 @@ export default {
 		const url = new URL(request.url);
 		const parts = url.pathname.split("/").filter(Boolean);
 		const accessToken = (env as any).ACCESS_TOKEN as string | undefined;
+		const authHeader = request.headers.get("Authorization");
 		let tokenFromRequest: string | undefined;
 
 		if (parts[0] === "mcp" && parts[1]) {
 			tokenFromRequest = parts[1];
+			console.log("DEBUG: token from path", { tokenFromRequest });
 		}
 
-		if (!tokenFromRequest) {
-			const authHeader = request.headers.get("Authorization");
-			if (authHeader?.startsWith("Bearer ")) {
-				tokenFromRequest = authHeader.slice(7);
-			}
+		if (!tokenFromRequest && authHeader?.startsWith("Bearer ")) {
+			tokenFromRequest = authHeader.slice(7);
+			console.log("DEBUG: token from Bearer header", {
+				authHeader,
+				tokenFromRequest,
+				headerLength: authHeader.length,
+				extractedLength: tokenFromRequest.length,
+				charCodes: Array.from(tokenFromRequest).slice(0, 5).map((c) => c.charCodeAt(0)),
+			});
 		}
 
-		console.log("DEBUG fetch:", {
-			pathname: url.pathname,
-			parts,
-			parts0: parts[0],
-			parts1: parts[1],
-			accessToken: accessToken ? `[SECRET:${accessToken.length}chars]` : "UNDEFINED",
-			tokenFromRequest: tokenFromRequest ? `[SECRET:${tokenFromRequest.length}chars]` : "UNDEFINED",
-			envKeys: Object.keys(env),
-			envAccessToken: (env as any).ACCESS_TOKEN ? "PRESENT" : "MISSING",
+		console.log("DEBUG: final validation", {
+			accessToken: accessToken ? `[${accessToken.length} chars]` : "UNDEFINED",
+			tokenFromRequest: tokenFromRequest ? `[${tokenFromRequest.length} chars]` : "UNDEFINED",
+			match: tokenFromRequest === accessToken,
+			tokenFromRequestFirstChars: tokenFromRequest?.substring(0, 8),
+			accessTokenFirstChars: accessToken?.substring(0, 8),
+			tokenFromRequestLastChars: tokenFromRequest?.substring(tokenFromRequest.length - 8),
+			accessTokenLastChars: accessToken?.substring(accessToken.length - 8),
 		});
 
 		if (!accessToken || !tokenFromRequest || tokenFromRequest !== accessToken) {
